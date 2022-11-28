@@ -14,9 +14,9 @@ const Part = (props) => {
 const Content = (props) => {
   return (
     <div>
-      <Part  partName = {props.parts[0].name} exerciseNumber = {props.parts[0].exercises}/>
-      <Part  partName = {props.parts[1].name} exerciseNumber = {props.parts[1].exercises}/>
-      <Part  partName = {props.parts[2].name} exerciseNumber = {props.parts[2].exercises}/>
+      <Part  partName = {props.part1.name} exerciseNumber = {props.part1.exercises}/>
+      <Part  partName = {props.part2.name} exerciseNumber = {props.part2.exercises}/>
+      <Part  partName = {props.part3.name} exerciseNumber = {props.part3.exercises}/>
     </div>
   )
 }
@@ -31,30 +31,28 @@ const Total = (props) => {
 
 const App = () => {
   const course = 'Half Stack application development'
-  const partsInfo = [
-    {
-      name : 'Fundamentals of React',
-      exercises: 10
-    },
-    {
-      name : 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      name : 'State of a component',
-      exercises: 14
-    }
-  ]
+  const part1 = {
+    name: 'Fundamentals of React',
+    exercises: 10
+  }
+  const part2 = {
+    name: 'Using props to pass data',
+    exercises: 7
+  }
+  const part3 = {
+    name: 'State of a component',
+    exercises: 14
+  }
 
-  let totalExercises = partsInfo[0].exercises + partsInfo[1].exercises + partsInfo[2].exercises 
-  console.log(totalExercises)
+  let totalExercises = part1.exercises + part2.exercises + part3.exercises 
+
   return (
     <div>
       {/* Calling Header component to render heading */}
       <Header course = {course} />
 
       {/* Calling Content component to render content */}
-      <Content parts = {partsInfo}/>
+      <Content part1 = {part1} part2 = {part2} part3 = {part3}/>
 
       {/* Calling Total component to render total of exercises */}
       <Total exercises = {totalExercises}/>
