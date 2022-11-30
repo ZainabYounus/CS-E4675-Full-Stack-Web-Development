@@ -6,9 +6,32 @@ const Button = (props) => <button onClick = {props.onClick}>{props.text}</button
 
 const Statistics = (props) => {
   return(
-    <p>{props.text} {props.value}</p>
-  ) 
+    <p>{props.text} {props.value}</p> 
+  )
+ 
 }
+
+const StatisticsDisplay = ({stats}) => {
+  if(stats.total !== 0){
+    return (
+      <div>
+        <Statistics text = 'good' value = {stats.good}/>
+        <Statistics text = 'neutral' value = {stats.neutral}/>
+        <Statistics text = 'bad' value = {stats.bad}/>
+
+        <Statistics text = 'all' value = {stats.total}/>
+        <Statistics text = 'average' value = {stats.average}/>
+        <Statistics text = 'positive' value = {stats.positivePercentage}/>
+      </div>
+    )
+  }
+  else{
+    return(
+      <p>No feedback given</p>
+    )
+  }
+}
+
 
 
 const App = () => {
@@ -22,7 +45,7 @@ const App = () => {
     neutral : 0,
     bad : -1
   }
-  
+
   let total = good + neutral + bad
   let average = (weightage.good*good + weightage.neutral*neutral + weightage.bad*bad) / total
   average = isNaN(average) ? 0 : average
@@ -31,6 +54,14 @@ const App = () => {
   positivePercentage = isNaN(positivePercentage) ? 0 : positivePercentage
   positivePercentage = positivePercentage + '%'
 
+  let stats = {
+    good: good,
+    neutral: neutral,
+    bad: bad, 
+    total: total,
+    average: average,
+    positivePercentage: positivePercentage
+  }
 
   const handleGoodFeedback = () => {
     setGood(good + 1)
@@ -54,13 +85,15 @@ const App = () => {
 
       <Heading text = 'statistics'/>
 
-      <Statistics text = 'good' value = {good}/>
+      <StatisticsDisplay stats = {stats}/>
+
+      {/* <Statistics text = 'good' value = {good}/>
       <Statistics text = 'neutral' value = {neutral}/>
       <Statistics text = 'bad' value = {bad}/>
 
       <Statistics text = 'all' value = {total}/>
       <Statistics text = 'average' value = {average}/>
-      <Statistics text = 'positive' value = {positivePercentage}/>
+      <Statistics text = 'positive' value = {positivePercentage}/> */}
 
     </div>
   )
