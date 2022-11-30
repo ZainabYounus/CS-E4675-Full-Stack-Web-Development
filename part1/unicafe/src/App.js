@@ -4,24 +4,23 @@ const Heading = ({text}) => <h1>{text}</h1>
 
 const Button = (props) => <button onClick = {props.onClick}>{props.text}</button>
 
-const Statistics = (props) => {
+const StatisticLine = (props) => {
   return(
     <p>{props.text} {props.value}</p> 
   )
- 
 }
 
-const StatisticsDisplay = ({stats}) => {
+const Statistics = ({stats}) => {
   if(stats.total !== 0){
     return (
       <div>
-        <Statistics text = 'good' value = {stats.good}/>
-        <Statistics text = 'neutral' value = {stats.neutral}/>
-        <Statistics text = 'bad' value = {stats.bad}/>
+        <StatisticLine text = 'good' value = {stats.good}/>
+        <StatisticLine text = 'neutral' value = {stats.neutral}/>
+        <StatisticLine text = 'bad' value = {stats.bad}/>
 
-        <Statistics text = 'all' value = {stats.total}/>
-        <Statistics text = 'average' value = {stats.average}/>
-        <Statistics text = 'positive' value = {stats.positivePercentage}/>
+        <StatisticLine text = 'all' value = {stats.total}/>
+        <StatisticLine text = 'average' value = {stats.average}/>
+        <StatisticLine text = 'positive' value = {stats.positivePercentage}/>
       </div>
     )
   }
@@ -85,15 +84,7 @@ const App = () => {
 
       <Heading text = 'statistics'/>
 
-      <StatisticsDisplay stats = {stats}/>
-
-      {/* <Statistics text = 'good' value = {good}/>
-      <Statistics text = 'neutral' value = {neutral}/>
-      <Statistics text = 'bad' value = {bad}/>
-
-      <Statistics text = 'all' value = {total}/>
-      <Statistics text = 'average' value = {average}/>
-      <Statistics text = 'positive' value = {positivePercentage}/> */}
+      <Statistics stats = {stats}/>
 
     </div>
   )
