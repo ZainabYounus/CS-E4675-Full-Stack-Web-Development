@@ -33,13 +33,9 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => <Person key = {person.name} personObj={person}/>)}
-      {/* <ul>
-        {notes.map(note => 
-          <Note key={note.id} note={note} />
+      {persons.map(
+        person => <Person key = {person.name} personObj={person}/>
         )}
-      </ul> */}
-      ...
     </div>
   )
 }
