@@ -1,16 +1,40 @@
 import { useState } from 'react'
 
+const Filter = (props) => {
+  return(
+    <div>
+      filter shown with <input value = {props.filterValue} onChange = {props.handleFilterInput}/>
+    </div>
+  )
+}
+
+const PersonForm = (props) => {
+  return(
+    <form onSubmit={props.addPerson}>
+        <div>
+          name: <input value={props.newName} onChange = {props.handleNameChange}/>
+        </div>
+        <div>
+          <br/>
+          number: <input value={props.newNumber} onChange = {props.handleNumberChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
+}
 const Person = (props) => <p>{props.personObj.name}  {props.personObj.number}</p>
 
-// const Display =(props) => {
-//   return(
-//     <div>
-//       {props.object.map(
-//         person => <Person key = {person.name} personObj={person}/>
-//         )}
-//     </div>
-//   )
-// }
+const Persons =(props) => {
+  return(
+    <div>
+      {props.filteredResult.map(
+        person => <Person key = {person.name} personObj={person}/>
+        )}
+    </div>
+  )
+}
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -60,27 +84,18 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      filter shown with <input value = {filterValue} onChange = {handleFilterInput}/>
+      <Filter filterValue = {filterValue} handleFilterInput = {handleFilterInput}/>
 
       <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange = {handleNameChange}/>
-        </div>
-        <div>
-          <br/>
-          number: <input value={newNumber} onChange = {handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+      addPerson={addPerson} 
+      newName={newName} handleNameChange={handleNameChange} 
+      newNumber={newNumber} handleNumberChange={handleNumberChange}
+      />
 
       <h2>Numbers</h2>
-      {filteredResult.map(
-        person => <Person key = {person.name} personObj={person}/>
-        )}
-      {/* <Display object={filteredResult}/> */}
+      <Persons filteredResult={filteredResult}/>
+      
     </div>
   )
 }
