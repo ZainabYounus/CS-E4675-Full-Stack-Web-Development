@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Filter = (props) => {
   return(
@@ -37,13 +38,25 @@ const Persons =(props) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { id:1, name: 'Arto Hellas', number: '040-1234567' }
-  ]) 
+
+  const [persons, setPersons] = useState([])
+  //   { id:1, name: 'Arto Hellas', number: '040-1234567' }
+  // ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [filteredResult, setFilterResult] = useState(persons)
+
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+        setFilterResult(response.data)
+    })
+    .catch(err => {console.log(err)})
+  }
+  useEffect(hook, [])
 
 
   const addPerson = (event) => {
