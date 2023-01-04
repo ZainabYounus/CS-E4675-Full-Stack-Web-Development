@@ -1,9 +1,43 @@
 import {useEffect, useState} from 'react'
 import  axios from 'axios'
 
-const RenderCountries = (props) => <p>{props.countryNames}</p>
+const RenderCountries = (props) => {
+
+  const[components, setComponent] = useState([''])
+
+  const showCountryInfo = () => {
+    setComponent([...components, props.country])
+  }
+  return(
+    <div>
+      {props.country.name}  <button onClick={showCountryInfo}>show</button>
+      {components?.map(item => <SpecificCountryInformation key={item} countryData = {item}/> )} 
+    </div>
+  )
+}
 
 const Languages = ({language}) => <li>{language}</li>
+
+const SpecificCountryInformation = (props) => {
+  if(props.countryData !== ''){
+    return(
+      <div>
+        <h2>{props.countryData.name}</h2>
+        <p>capital {props.countryData.capital}</p>
+        <p>area {props.countryData.area}</p>
+  
+        <br/>
+        <h3>languages:</h3>
+        <ul>
+          {props.countryData.languages.map(language => <Languages key={language.name} language={language.name}/>)}
+        </ul>
+        <img src={`${props.countryData.flag}`} alt='flag' width="150px" height="150px"></img>
+      </div>
+    )
+  }
+  
+}
+
 
 const Information= (props) => {
   let countriesCount = props.countries.length
@@ -17,8 +51,8 @@ const Information= (props) => {
     return(
       <div>
         {props.countries
-        .map(c => 
-        <RenderCountries key={c.name} countryNames = {c.name}/>
+        .map(country => 
+        <RenderCountries key={country.name} country = {country}/>
         )}
       </div>
     )
@@ -27,18 +61,7 @@ const Information= (props) => {
   if(countriesCount === 1){
     const countryData = props.countries[0]
     return(
-      <div>
-        <h2>{countryData.name}</h2>
-        <p>capital {countryData.capital}</p>
-        <p>area {countryData.area}</p>
-
-        <br/>
-        <h3>languages:</h3>
-        <ul>
-          {countryData.languages.map(language => <Languages key={language.name} language={language.name}/>)}
-        </ul>
-        <img src={`${countryData.flag}`} alt='flag' width="150px" height="150px"></img>
-      </div>
+      <SpecificCountryInformation countryData={countryData}/>
     )
   }
 }
