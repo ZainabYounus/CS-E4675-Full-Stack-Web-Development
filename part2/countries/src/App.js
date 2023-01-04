@@ -5,7 +5,7 @@ const RenderCountries = (props) => <p>{props.countryNames}</p>
 
 const Languages = ({language}) => <li>{language}</li>
 
-const Message= (props) => {
+const Information= (props) => {
   let countriesCount = props.countries.length
   if(countriesCount > 10 && countriesCount < 250){
     return(
@@ -69,7 +69,7 @@ function App() {
     <div className="App">
       find countries <input value={search} onChange={searchHandler}/>
 
-      <Message countries={searchedCountries}></Message>
+      <Information countries={searchedCountries}></Information>
 
     </div>
   );
