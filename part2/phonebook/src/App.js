@@ -29,8 +29,6 @@ const Person = (props) => {
 
   const removePerson = (personObj) => {
     if (window.confirm(`Delete ${personObj.name}?`)) {
-      // window.open("exit.html", "Thanks for Visiting!");
-
       personService.remove(personObj.id)
       .then(responseData => {
         console.log(responseData)
@@ -87,10 +85,22 @@ const App = () => {
   const addPerson = (event) => {
 
     event.preventDefault()
-    const isNameExist = persons.filter(person => person.name === newName).length > 0 ? true : false
 
-    if(isNameExist){
-      alert(`${newName} is already added to phonebook`)
+    const existingPerson = persons.find(person => person.name === newName)
+
+    if(existingPerson){
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        //make a PUT request to update the person
+        const updatedObject = {
+          ...existingPerson, number: newNumber
+        }
+        personService.update(updatedObject)
+        .then(responseData => {
+          setPersons(persons.map(person => person.id !== existingPerson.id ? person : responseData))
+          setFilterResult(filteredResult.map(person => person.id !== existingPerson.id ? person : responseData))
+        })
+        .catch(err => console.log(err))
+      }
     }
 
     else{
