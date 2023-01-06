@@ -25,13 +25,41 @@ const PersonForm = (props) => {
       </form>
   )
 }
-const Person = (props) => <p>{props.personObj.name}  {props.personObj.number}</p>
+const Person = (props) => {
+
+  const removePerson = (personObj) => {
+    if (window.confirm(`Delete ${personObj.name}?`)) {
+      // window.open("exit.html", "Thanks for Visiting!");
+
+      personService.remove(personObj.id)
+      .then(responseData => {
+        console.log(responseData)
+        props.setPersons(props.persons.filter(p => p.id !== personObj.id))
+        props.setFilterResult(props.filteredResult.filter(p => p.id !== personObj.id))
+      })
+      .catch(err=> console.log(err))
+    }
+  }
+
+
+  return(
+    <div>
+      {props.personObj.name}  {props.personObj.number}
+      <button onClick={() => removePerson(props.personObj)}>Delete</button>
+    </div>
+  )
+}
 
 const Persons =(props) => {
+
   return(
     <div>
       {props.filteredResult.map(
-        person => <Person key = {person.name} personObj={person}/>
+        person => <Person 
+        key = {person.name} personObj={person} 
+        filteredResult={props.filteredResult} setFilterResult={props.setFilterResult} 
+        persons={props.persons} setPersons={props.setPersons}
+        />
         )}
     </div>
   )
@@ -58,12 +86,6 @@ const App = () => {
 
   const addPerson = (event) => {
 
-    const addPersonToServer = (personObject) => {
-      personService.create(personObject)
-      .then(responseData => console.log(responseData))
-      .catch(console.log("contact could not be added"))
-    }
-
     event.preventDefault()
     const isNameExist = persons.filter(person => person.name === newName).length > 0 ? true : false
 
@@ -76,9 +98,15 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      addPersonToServer(nameObject)
-      setPersons(persons.concat(nameObject))
-      setFilterResult(filteredResult.concat(nameObject))
+
+      personService.create(nameObject)
+      .then(responseData => {
+        console.log(responseData)
+
+        setPersons(persons.concat(responseData))
+        setFilterResult(filteredResult.concat(responseData))
+      })
+      .catch(err=> console.log(err))
     }
     setNewName('')
     setNewNumber('')
@@ -111,7 +139,10 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons filteredResult={filteredResult}/>
+      <Persons 
+      filteredResult={filteredResult} setFilterResult={setFilterResult} 
+      persons={persons} setPersons={setPersons}
+      />
       
     </div>
   )
