@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = (props) => {
   return(
@@ -46,11 +46,10 @@ const App = () => {
   const [filteredResult, setFilterResult] = useState(persons)
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-        setFilterResult(response.data)
+    personService.getAll()
+    .then(responseData => {
+        setPersons(responseData)
+        setFilterResult(responseData)
     })
     .catch(err => {console.log(err)})
   }
@@ -60,11 +59,9 @@ const App = () => {
   const addPerson = (event) => {
 
     const addPersonToServer = (personObject) => {
-        console.log(personObject)
-        const URL = `http://localhost:3001/persons`
-        axios.post(URL, personObject)
-        .then(response => console.log(response.data))
-        .catch(console.log("contact could not be added"))
+      personService.create(personObject)
+      .then(responseData => console.log(responseData))
+      .catch(console.log("contact could not be added"))
     }
 
     event.preventDefault()
@@ -80,7 +77,6 @@ const App = () => {
         number: newNumber
       }
       addPersonToServer(nameObject)
-
       setPersons(persons.concat(nameObject))
       setFilterResult(filteredResult.concat(nameObject))
     }
