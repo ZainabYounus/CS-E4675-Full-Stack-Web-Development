@@ -40,8 +40,6 @@ const Persons =(props) => {
 const App = () => {
 
   const [persons, setPersons] = useState([])
-  //   { id:1, name: 'Arto Hellas', number: '040-1234567' }
-  // ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
@@ -60,6 +58,15 @@ const App = () => {
 
 
   const addPerson = (event) => {
+
+    const addPersonToServer = (personObject) => {
+        console.log(personObject)
+        const URL = `http://localhost:3001/persons`
+        axios.post(URL, personObject)
+        .then(response => console.log(response.data))
+        .catch(console.log("contact could not be added"))
+    }
+
     event.preventDefault()
     const isNameExist = persons.filter(person => person.name === newName).length > 0 ? true : false
 
@@ -69,10 +76,11 @@ const App = () => {
 
     else{
       const nameObject = {
-        id: persons.length + 1,
         name: newName,
         number: newNumber
       }
+      addPersonToServer(nameObject)
+
       setPersons(persons.concat(nameObject))
       setFilterResult(filteredResult.concat(nameObject))
     }
