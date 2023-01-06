@@ -63,6 +63,29 @@ const Persons =(props) => {
   )
 }
 
+const Notification = (props) => {
+  const notificationStyle = {
+    color: `${props.color}`,
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if(props.message ===  null){
+    return 
+  }
+
+  else{
+    return(
+      <div style = {notificationStyle}>
+        {props.message}
+      </div>
+    )
+  }
+}
 const App = () => {
 
   const [persons, setPersons] = useState([])
@@ -70,7 +93,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
   const [filteredResult, setFilterResult] = useState(persons)
-
+  const [notificationColor, setNotificationColor] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
+  
   const hook = () => {
     personService.getAll()
     .then(responseData => {
@@ -85,7 +110,6 @@ const App = () => {
   const addPerson = (event) => {
 
     event.preventDefault()
-
     const existingPerson = persons.find(person => person.name === newName)
 
     if(existingPerson){
@@ -98,8 +122,24 @@ const App = () => {
         .then(responseData => {
           setPersons(persons.map(person => person.id !== existingPerson.id ? person : responseData))
           setFilterResult(filteredResult.map(person => person.id !== existingPerson.id ? person : responseData))
+
+          setNotificationColor('green')
+          setNotificationMessage(`Updated phone number of ${responseData.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+
         })
-        .catch(err => console.log(err))
+        .catch(err=> {
+          setPersons(persons.filter(person => person.id !== existingPerson.id))
+          setFilterResult(filteredResult.filter(person => person.id !== existingPerson.id))
+
+          setNotificationColor('red')
+          setNotificationMessage(`Information of ${existingPerson.name} has already been removed from server`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
       }
     }
 
@@ -115,6 +155,14 @@ const App = () => {
 
         setPersons(persons.concat(responseData))
         setFilterResult(filteredResult.concat(responseData))
+
+        setNotificationColor('green')
+        setNotificationMessage(`Added ${responseData.name}`)
+
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+
       })
       .catch(err=> console.log(err))
     }
@@ -132,13 +180,14 @@ const App = () => {
 
   const handleFilterInput = (event) =>{
     const isMatchFound = persons.filter(person => person.name.toLowerCase().match(event.target.value.toLowerCase()))
-    isMatchFound.length > 0 ? setFilterResult(isMatchFound) : setFilterResult(persons)
+    setFilterResult(isMatchFound)
     setFilterValue(event.target.value)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {notificationMessage !== '' ? <Notification color={notificationColor} message = {notificationMessage}/> : <></>}
       <Filter filterValue = {filterValue} handleFilterInput = {handleFilterInput}/>
 
       <h2>add a new</h2>
