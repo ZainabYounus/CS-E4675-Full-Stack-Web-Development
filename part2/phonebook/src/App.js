@@ -1,91 +1,10 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
-const Filter = (props) => {
-  return(
-    <div>
-      filter shown with <input value = {props.filterValue} onChange = {props.handleFilterInput}/>
-    </div>
-  )
-}
-
-const PersonForm = (props) => {
-  return(
-    <form onSubmit={props.addPerson}>
-        <div>
-          name: <input value={props.newName} onChange = {props.handleNameChange}/>
-        </div>
-        <div>
-          <br/>
-          number: <input value={props.newNumber} onChange = {props.handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-  )
-}
-const Person = (props) => {
-
-  const removePerson = (personObj) => {
-    if (window.confirm(`Delete ${personObj.name}?`)) {
-      personService.remove(personObj.id)
-      .then(responseData => {
-        console.log(responseData)
-        props.setPersons(props.persons.filter(p => p.id !== personObj.id))
-        props.setFilterResult(props.filteredResult.filter(p => p.id !== personObj.id))
-      })
-      .catch(err=> console.log(err))
-    }
-  }
-
-
-  return(
-    <div>
-      {props.personObj.name}  {props.personObj.number}
-      <button onClick={() => removePerson(props.personObj)}>Delete</button>
-    </div>
-  )
-}
-
-const Persons =(props) => {
-
-  return(
-    <div>
-      {props.filteredResult.map(
-        person => <Person 
-        key = {person.name} personObj={person} 
-        filteredResult={props.filteredResult} setFilterResult={props.setFilterResult} 
-        persons={props.persons} setPersons={props.setPersons}
-        />
-        )}
-    </div>
-  )
-}
-
-const Notification = (props) => {
-  const notificationStyle = {
-    color: `${props.color}`,
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10
-  }
-
-  if(props.message ===  null){
-    return 
-  }
-
-  else{
-    return(
-      <div style = {notificationStyle}>
-        {props.message}
-      </div>
-    )
-  }
-}
 const App = () => {
 
   const [persons, setPersons] = useState([])
@@ -95,7 +14,7 @@ const App = () => {
   const [filteredResult, setFilterResult] = useState(persons)
   const [notificationColor, setNotificationColor] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
-  
+
   const hook = () => {
     personService.getAll()
     .then(responseData => {
