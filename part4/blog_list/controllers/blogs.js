@@ -1,21 +1,31 @@
 const blogsRouter = require('express').Router()
 //const { response } = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+// const getTokenFrom = request => {
+// 	const authorization = request.get('authorization')
+// 	if(authorization && authorization.startsWith('Bearer')){
+// 		return authorization.replace('Bearer', '').split(' ')[1]
+// 	}
+// 	return null
+// }
 
 // GET ALL BLOGS
 blogsRouter.get('/', async (request, response) => {
-	const blogs =  await Blog.find({})
+	const blogs =  await Blog.find({}).populate('user', { username:1, name:1 })
 	response.json(blogs)
-	//Blog
-	// .find({})
-	// .then(blogs => {
-	// 	response.json(blogs)
-	// })
 })
 
 // POST A BLOG
 blogsRouter.post('/', async (request, response) => {
 	const body = request.body
+	const decodedToken = jwt.verify(request.token, process.env.SECRET)
+	if(!decodedToken.id){
+		return response.status(401).json({ error: 'token invalid' })
+	}
+	const user = await User.findById(decodedToken.id)
 
 	if(!body.title || !request.url){
 		response.status(400).json({ error: 'Bad Request' })
@@ -26,26 +36,16 @@ blogsRouter.post('/', async (request, response) => {
 			title: body.title,
 			author: body.author,
 			url: body.url,
-			likes: body.likes === undefined ? 0 : body.likes
+			likes: body.likes === undefined ? 0 : body.likes,
+			user: user.id
 		})
 		const savedBlog =  await blog.save()
+		user.blogs = user.blogs.concat(savedBlog._id)
+		await user.save()
 		response.status(201).json(savedBlog.toJSON())
 	}
 
 })
-
-
-// blogsRouter.post('/', (request, response, next) => {
-// 	const blog = new Blog(request.body)
-
-// 	blog
-// 		.save()
-// 		.then(result => {
-// 			response.status(201).json(result.toJSON())
-// 		})
-// 		.catch(error => {next(error)})
-// })
-
 
 // GET BLOG BY ID
 blogsRouter.get('/:id', async (request, response) => {
