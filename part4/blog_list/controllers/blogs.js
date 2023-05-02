@@ -14,10 +14,9 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 	const body = request.body
 	const jwtUser =  request.user
-
 	const user = await User.findById(jwtUser.id)
 
-	if(!body.title || !request.url){
+	if(!body.title || !body.url){
 		response.status(400).json({ error: 'Bad Request' })
 	}
 
