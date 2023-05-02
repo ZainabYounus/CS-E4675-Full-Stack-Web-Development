@@ -4,13 +4,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-// const getTokenFrom = request => {
-// 	const authorization = request.get('authorization')
-// 	if(authorization && authorization.startsWith('Bearer')){
-// 		return authorization.replace('Bearer', '').split(' ')[1]
-// 	}
-// 	return null
-// }
 
 // GET ALL BLOGS
 blogsRouter.get('/', async (request, response) => {
@@ -74,8 +67,19 @@ blogsRouter.put('/:id', async (request, response) => {
 
 // DELETE A BLOG BY ID
 blogsRouter.delete('/:id', async (request, response) => {
-	await Blog.findByIdAndRemove(request.params.id)
-	response.status(204).end()
+	const decodedToken = jwt.verify(request.token, process.env.SECRET)
+	if(!decodedToken.id){
+		return response.status(401).json({ error: 'token invalid' })
+	}
+
+	const blog = await Blog.findById(request.params.id)
+	if(decodedToken.id.toString() === blog.user.toString()){
+		await Blog.findByIdAndRemove(request.params.id)
+		response.status(204).end()
+	}
+	else{
+		response.status(401).end()
+	}
 })
 
 
