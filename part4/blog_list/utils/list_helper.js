@@ -42,9 +42,16 @@ const mostBlogs = (blogs) => {
 	return blogs.length === 0 ? {} : { author: blog, blogs: blogsCountByAuthor[blog] }
 }
 
+const mostLikes = (blogs) => {
+	const sortedByLikes = lodash.sortBy(blogs, 'likes')
+	const blogWithMostLikes = sortedByLikes[sortedByLikes.length - 1]
+	return blogWithMostLikes.length === 0 ? {} : { 'author' : blogWithMostLikes.author, 'likes': blogWithMostLikes.likes }
+}
+
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostLikes
 }

@@ -100,5 +100,10 @@ describe('testing lodash related functions', () => {
 		const result = listHelper.mostBlogs(blogs)
 		expect(result).toEqual({ 'author': 'Robert C. Martin', 'blogs': 3 })
 	})
+
+	test('the blog with most likes', () => {
+		const result = listHelper.mostLikes(blogs)
+		expect(result).toEqual({ 'author': 'Edsger W. Dijkstra', 'likes': 12 })
+	})
 })
 
