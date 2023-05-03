@@ -94,3 +94,11 @@ describe('favorite blog with the most likes', () => {
 
 })
 
+describe('testing lodash related functions', () => {
+
+	test('the author with most blogs', () => {
+		const result = listHelper.mostBlogs(blogs)
+		expect(result).toEqual({ 'author': 'Robert C. Martin', 'blogs': 3 })
+	})
+})
+
