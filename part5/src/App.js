@@ -54,6 +54,24 @@ const handleLogin = async (event) => {
     }
   }
 
+  const handleLogout = async (event) => {
+    event.preventDefault()
+  
+  try {
+    
+    window.localStorage.removeItem('loggedBlogappUser')
+      
+      blogService.setToken('')
+      setUser(null)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      // setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        // setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
 
 const loginForm = () => (
@@ -101,6 +119,7 @@ return (
   {user && <div>
     <h2>blogs</h2>
     <p>{user.name} logged in</p>
+    <button onClick = {handleLogout}>logout</button>
     {renderBlogs()}
     </div>}
     
