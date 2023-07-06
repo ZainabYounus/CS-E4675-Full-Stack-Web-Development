@@ -2,22 +2,35 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { NewBlogForm } from './components/NewBlogForm'
+import { LoginForm } from './components/LoginForm'
 
 const App = () => {
 const [blogs, setBlogs] = useState([])
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
 const [user, setUser] = useState(null)
-// const [errorMessage, setErrorMessage] = useState(null)
+const [errorMessage, setErrorMessage] = useState(null)
+const [title, setTitle] = useState("")
+const [author, setAuthor] = useState("")
+const [url, setUrl] = useState("")
 
 useEffect(() => {
-  blogService.setToken(user?.token)
-  blogService.getAll()
-  .then(blogs => {
-    setBlogs( blogs )
+  try{
+    blogService.setToken(user?.token)
+    blogService.getAll()
+    .then(blogs => {
+      setBlogs( blogs )
+    })
   }
-    
-    )  
+  catch(exception){
+    setErrorMessage('Login to get blogs')
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
+
   }, [])
 
 // The empty array as the parameter of the effect ensures that the effect is executed only when the component is rendered for the first time.
@@ -47,9 +60,9 @@ const handleLogin = async (event) => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      // setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong credentials')
       setTimeout(() => {
-        // setErrorMessage(null)
+        setErrorMessage(null)
       }, 5000)
     }
   }
@@ -73,36 +86,36 @@ const handleLogin = async (event) => {
     }
   }
 
+  const handleCreateNewBlog = async (event) => {
+    event.preventDefault()
 
-const loginForm = () => (
-  <div>
-    <h1>log in to application</h1>
+    const blog = {
+      title,
+      author,
+      url,
+    }
 
-    <form onSubmit={handleLogin}>
-      <div>
-      username
-      <input
-      type="text"
-      value={username}
-      name="Username"
-      onChange={({ target }) => setUsername(target.value)}
-      />
-      </div>
-      <div>
-      password
-      <input
-      type="password"
-      value={password}
-      name="Password"
-      onChange={({ target }) => setPassword(target.value)}
-      />
-      </div>
-      <button type="submit">login</button>
-      </form>      
+    await blogService.createBlog(blog)
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+    setAuthor("")
+    setTitle("")
+    setUrl("")
+  }
 
-  </div>
-  
-  )
+
+  const blogsForm = () => {
+    return(
+    <div>
+      <h2>blogs</h2>
+      <h4>{user.username} logged in</h4>
+      <button onClick={handleLogout}>Log out</button>
+      <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} handleCreateBlog={handleCreateNewBlog} />
+      {renderBlogs()}
+    </div>
+    )
+  }
+
 
 const renderBlogs = () => (
   <div>
@@ -112,19 +125,18 @@ const renderBlogs = () => (
     </div>
     )
 
-return (
-  <div>
-  
-  {!user && loginForm()}
-  {user && <div>
-    <h2>blogs</h2>
-    <p>{user.name} logged in</p>
-    <button onClick = {handleLogout}>logout</button>
-    {renderBlogs()}
-    </div>}
-    
-    </div>
+    return (
+      <div>
+      {
+        user === null
+        ?
+        <LoginForm handleLogin={handleLogin} username={username} password={password} setPassword={setPassword} setUsername={setUsername} />
+        :
+        blogsForm()
+      }
+      </div>
     )
+
   }
 
 export default App
