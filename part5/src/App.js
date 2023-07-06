@@ -4,16 +4,18 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { NewBlogForm } from './components/NewBlogForm'
 import { LoginForm } from './components/LoginForm'
+import { Notification } from './components/Notification'
 
 const App = () => {
 const [blogs, setBlogs] = useState([])
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
 const [user, setUser] = useState(null)
-const [errorMessage, setErrorMessage] = useState(null)
 const [title, setTitle] = useState("")
 const [author, setAuthor] = useState("")
 const [url, setUrl] = useState("")
+const [message, setMessage] = useState(null)
+const [error, setError] = useState(false)
 
 useEffect(() => {
   try{
@@ -24,9 +26,11 @@ useEffect(() => {
     })
   }
   catch(exception){
-    setErrorMessage('Login to get blogs')
+    setMessage('Login to get blogs')
+    setError(true)
     setTimeout(() => {
-      setErrorMessage(null)
+      setMessage(null)
+      setError(false)
     }, 5000)
   }
 
@@ -60,9 +64,11 @@ const handleLogin = async (event) => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setMessage('Wrong credentials')
+      setError(true)
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+      setError(false)
       }, 5000)
     }
   }
@@ -95,12 +101,26 @@ const handleLogin = async (event) => {
       url,
     }
 
-    await blogService.createBlog(blog)
-    const blogs = await blogService.getAll()
-    setBlogs(blogs)
-    setAuthor("")
-    setTitle("")
-    setUrl("")
+    try{
+      await blogService.createBlog(blog)
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+      setMessage(`a new blog ${title} by ${author} created`)
+      setAuthor("")
+      setTitle("")
+      setUrl("")
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }catch(exception){
+      setMessage('Failed to create blog, please try again')
+      setError(true)
+      setTimeout(() => {
+        setMessage(null)
+        setError(false)
+      }, 5000)
+    }
+
   }
 
 
@@ -127,13 +147,16 @@ const renderBlogs = () => (
 
     return (
       <div>
-      {
-        user === null
-        ?
-        <LoginForm handleLogin={handleLogin} username={username} password={password} setPassword={setPassword} setUsername={setUsername} />
-        :
-        blogsForm()
-      }
+        {
+          message !== null && <Notification message={message} error={error} />
+        }
+        {
+          user === null
+          ?
+          <LoginForm handleLogin={handleLogin} username={username} password={password} setPassword={setPassword} setUsername={setUsername} />
+          :
+          blogsForm()
+          }
       </div>
     )
 
