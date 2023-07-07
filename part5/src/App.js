@@ -17,17 +17,28 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const testSubmit = () => {
+    return
+  }
+
   useEffect(() => {
     try{
-      blogService.setToken(user.token)
-      blogService.getAll()
-        .then(blogs => {
-          blogs.sort((a, b) => b.likes - a.likes)
-          setBlogs( blogs )
-        })
+      if(user){
+        if(user.token){
+          blogService.setToken(user.token)
+          blogService.getAll()
+            .then(blogs => {
+              blogs.sort((a, b) => b.likes - a.likes)
+              setBlogs( blogs )
+            })
+        }
+      }
     }
     catch(exception){
-      console.log(exception)
+      setMessage('Login to get blogs')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
 
 
@@ -101,28 +112,54 @@ const App = () => {
   }
 
 
-  const addBlog = async(blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    try{
-      await blogService.createBlog(blogObject)
-      const blogs = await blogService.getAll()
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-      setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+  const updateBlog = async (blog) => {
+
+    const updateBlog = {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
     }
-    catch(exception){
-      setMessage('Failed to create blog, please try again')
+
+    try {
+      await blogService.update(blog.id, updateBlog)
+      const updatedBlogs = await blogService.getAll()
+      updatedBlogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(updatedBlogs)
+    } catch (e) {
+      console.error(e)
+      setMessage('Something went wrong, please try again')
       setError(true)
       setTimeout(() => {
         setMessage(null)
         setError(false)
       }, 5000)
     }
-
   }
+
+  // const addBlog = async(blogObject) => {
+  //   blogFormRef.current.toggleVisibility()
+  //   try{
+  //     await blogService.createBlog(blogObject)
+  //     const blogs = await blogService.getAll()
+  //     blogs.sort((a, b) => b.likes - a.likes)
+  //     setBlogs(blogs)
+  //     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
+  //     setTimeout(() => {
+  //       setMessage(null)
+  //     }, 5000)
+  //   }
+  //   catch(exception){
+  //     setMessage('Failed to create blog, please try again')
+  //     setError(true)
+  //     setTimeout(() => {
+  //       setMessage(null)
+  //       setError(false)
+  //     }, 5000)
+  //   }
+
+  // }
 
 
   const blogsForm = () => {
@@ -134,7 +171,7 @@ const App = () => {
         <button onClick={handleLogout}>Log out</button>
 
         <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <NewBlogForm handleCreateBlog={addBlog} />
+          <NewBlogForm setMessage={setMessage} setBlogs={setBlogs} setError={setError} blogFormRef={blogFormRef}/>
         </Togglable>
 
         {renderBlogs()}
@@ -147,7 +184,7 @@ const App = () => {
   const renderBlogs = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} setMessage={setMessage} setError={setError}/>
+        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} setMessage={setMessage} setError={setError} updateBlog={updateBlog}/>
       )}
     </div>
   )

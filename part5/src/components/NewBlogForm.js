@@ -1,22 +1,40 @@
 import { useState } from 'react'
+import blogService from '../services/blogs'
 
-export const NewBlogForm = ({ handleCreateBlog }) => {
+export const NewBlogForm = ({ setMessage, setBlogs, setError, blogFormRef, testSubmit }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const addBlog = (event) => {
+  const addBlog = async(event) => {
     event.preventDefault()
-    handleCreateBlog({
+    const blog = {
       title: title,
       author: author,
       url: url
-    })
+    }
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    try {
+      await blogService.createBlog(blog)
+      blogFormRef.current.toggleVisibility()
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+      setMessage(`a new blog ${title} by ${author} created`)
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setMessage('Failed to create blog, please try again')
+      setError(true)
+      setTimeout(() => {
+        setMessage(null)
+        setError(false)
+      }, 5000)
+    }
   }
 
   return (
@@ -32,7 +50,7 @@ export const NewBlogForm = ({ handleCreateBlog }) => {
         <div>
           <input placeholder="URL" type="text" value={url} name="url" onChange={event => setUrl(event.target.value)} />
         </div>
-        <button type="submit">Create</button>
+        <button onClick={testSubmit} type="submit">Create</button>
       </form>
     </div>
   )
