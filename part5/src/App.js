@@ -95,14 +95,24 @@ const handleLogin = async (event) => {
 
   const addBlog = async(blogObject) => {
     blogFormRef.current.toggleVisibility()
-    await blogService.createBlog(blogObject)
+    try{
+      await blogService.createBlog(blogObject)
     const blogs = await blogService.getAll()
     setBlogs(blogs)
     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
     setTimeout(() => {
       setMessage(null)
-      setError(false)
     }, 5000)
+    }
+    catch(exception){
+      setMessage('Failed to create blog, please try again')
+      setError(true)
+      setTimeout(() => {
+        setMessage(null)
+        setError(false)
+      }, 5000)
+    }
+    
   }
 
 
