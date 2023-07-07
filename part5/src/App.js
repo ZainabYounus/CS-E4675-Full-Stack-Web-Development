@@ -5,6 +5,7 @@ import loginService from './services/login'
 import { NewBlogForm } from './components/NewBlogForm'
 import { LoginForm } from './components/LoginForm'
 import { Notification } from './components/Notification'
+import { Togglable } from './components/Togglable'
 
 const App = () => {
 const [blogs, setBlogs] = useState([])
@@ -16,7 +17,6 @@ const [author, setAuthor] = useState("")
 const [url, setUrl] = useState("")
 const [message, setMessage] = useState(null)
 const [error, setError] = useState(false)
-const [newBlogVisible, setNewBlogVisible] = useState(false)
 
 useEffect(() => {
   try{
@@ -126,8 +126,6 @@ const handleLogin = async (event) => {
 
 
   const blogsForm = () => {
-    const hideWhenVisible = { display: newBlogVisible ? 'none' : '' }
-    const showWhenVisible = { display: newBlogVisible ? '' : 'none' }
 
     return(
       <div>
@@ -135,16 +133,11 @@ const handleLogin = async (event) => {
         <h4>{user.username} logged in</h4>
         <button onClick={handleLogout}>Log out</button>
 
-        <div style={hideWhenVisible}>
-          <button onClick={() => setNewBlogVisible(true)}>New blog</button>
-        </div>
-        
-        <div style={showWhenVisible}>
-          <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} 
+        <Togglable buttonLabel="new blog">
+        <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} 
           setAuthor={setAuthor} setUrl={setUrl} handleCreateBlog={handleCreateNewBlog} 
-          />
-          <button onClick={() => setNewBlogVisible(false)}>cancel</button>
-        </div>
+        />
+        </Togglable>
 
         {renderBlogs()}
     </div>
