@@ -1,17 +1,21 @@
 .error {
-    border: 2px solid red;
-    color: red;
-    border-radius: 10px;
-    width: 50%;
-    margin: auto;
-    background-color: lightgray;
-  }
-  
-  .info {
-    border: 2px solid green;
-    color: green;
-    border-radius: 10px;
-    width: 50%;
-    margin: auto;
-    background-color: lightgray;
-  }
+  border: 2px solid red;
+  color: red;
+  color: white;
+  background-color: rgba(255, 0, 0, 0.8);
+  border-radius: 10px;
+  width: 50%;
+  margin: auto;
+  position: fixed;
+}
+
+.info {
+  border: 2px solid green;
+  color: green;
+  color: white;
+  background-color: rgba(0, 128, 0, 0.8);
+  border-radius: 10px;
+  width: 50%;
+  margin: auto;
+  position: fixed;
+}

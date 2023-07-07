@@ -1,12 +1,20 @@
 .blog {
-    border: 1px solid black;
-    margin-bottom: 1em;
-  }
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  margin-top: 1em;
+  background-color: beige;
+}
+
+.blog-details {
+  margin-left: 0.5em;
+}
   
   .blog-title {
     font-size: large;
     font-weight: 600;
     margin-top: 0.5em;
+    margin-left: 0.5em;
   }
   
   .toggle-details {
@@ -17,11 +25,21 @@
     border-radius: 10px ;
     width: 5em;
     cursor: pointer;
+    margin-left: 1em;
   }
 
   .like-button {
     background-color: #FF5B96;
     border: 1px solid black;
     border-radius: 10px;
+    margin-left: 1em; cursor: pointer;
+  }
+  
+  .delete-button {
+    background-color: #FF5B5B;
+    border: 1px solid black;
     margin-left: 1em;
+    margin-top: 0.5em;
+    width: 5em;
+    cursor: pointer;
   }

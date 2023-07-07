@@ -22,6 +22,7 @@ useEffect(() => {
     blogService.setToken(user?.token)
     blogService.getAll()
     .then(blogs => {
+      blogs.sort((a, b) => b.likes - a.likes)
       setBlogs( blogs )
     })
   }
@@ -98,6 +99,7 @@ const handleLogin = async (event) => {
     try{
       await blogService.createBlog(blogObject)
     const blogs = await blogService.getAll()
+    blogs.sort((a, b) => b.likes - a.likes)
     setBlogs(blogs)
     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
     setTimeout(() => {
@@ -138,8 +140,7 @@ const handleLogin = async (event) => {
 const renderBlogs = () => (
   <div>
   {blogs.map(blog =>
-    // <Blog key={blog.id} blog={blog} />
-    <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
+    <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} setMessage={setMessage} setError={setError}/>
     )}
     </div>
     )
