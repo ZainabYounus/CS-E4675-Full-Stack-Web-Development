@@ -1,8 +1,9 @@
-import { useState } from "react"
-import "../styling/blog.css"
+import { useState } from 'react'
+import '../styling/blog.css'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, setBlogs, user, setMessage, setError}) => {
+const Blog = ({ blog, setBlogs, user, setMessage, setError }) => {
   const [details, setDetails] = useState(false)
 
   const toggleDetails = () => {
@@ -78,25 +79,33 @@ const Blog = ({blog, setBlogs, user, setMessage, setError}) => {
 
 
   return (
-  <div className="blog">
-    <div className="blog-title">{blog.title}</div>
-    {
-      details
-      ?
-      <div className="blog-details">
-        {blog.author}<br/>
-        <a href={blog.url}>{blog.url}</a><br/>
-        {blog.likes}<button className="like-button" onClick={updateBlogLikes}>like</button><br/>
-        {/* {blog.url}<br/>
-        {blog.likes}<button onClick={() => {console.log("you liked this")}}>like</button><br/> */}
-        {blog.user.username}<br/>
-        <button className="delete-button" onClick={deleteBlog}>delete</button>
-        <br/>
-        <button className="toggle-details" onClick={toggleDetails}>hide</button>
-      </div>
-      :
-      <button className="toggle-details" onClick={toggleDetails}>show</button>
-    }
-  </div>)}
+    <div className="blog">
+      <div className="blog-title">{blog.title}</div>
+      {
+        details
+          ?
+          <div className="blog-details">
+            {blog.author}<br/>
+            <a href={blog.url}>{blog.url}</a><br/>
+            {blog.likes}<button className="like-button" onClick={updateBlogLikes}>like</button><br/>
+            {blog.user.username}<br/>
+            <button className="delete-button" onClick={deleteBlog}>delete</button>
+            <br/>
+            <button className="toggle-details" onClick={toggleDetails}>hide</button>
+          </div>
+          :
+          <button className="toggle-details" onClick={toggleDetails}>show</button>
+      }
+    </div>
+  )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired
+}
 
 export default Blog
