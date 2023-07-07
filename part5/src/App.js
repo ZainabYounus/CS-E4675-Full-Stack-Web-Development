@@ -16,6 +16,7 @@ const [author, setAuthor] = useState("")
 const [url, setUrl] = useState("")
 const [message, setMessage] = useState(null)
 const [error, setError] = useState(false)
+const [newBlogVisible, setNewBlogVisible] = useState(false)
 
 useEffect(() => {
   try{
@@ -125,14 +126,29 @@ const handleLogin = async (event) => {
 
 
   const blogsForm = () => {
+    const hideWhenVisible = { display: newBlogVisible ? 'none' : '' }
+    const showWhenVisible = { display: newBlogVisible ? '' : 'none' }
+
     return(
-    <div>
-      <h2>blogs</h2>
-      <h4>{user.username} logged in</h4>
-      <button onClick={handleLogout}>Log out</button>
-      <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} handleCreateBlog={handleCreateNewBlog} />
-      {renderBlogs()}
+      <div>
+        <h2>blogs</h2>
+        <h4>{user.username} logged in</h4>
+        <button onClick={handleLogout}>Log out</button>
+
+        <div style={hideWhenVisible}>
+          <button onClick={() => setNewBlogVisible(true)}>New blog</button>
+        </div>
+        
+        <div style={showWhenVisible}>
+          <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} 
+          setAuthor={setAuthor} setUrl={setUrl} handleCreateBlog={handleCreateNewBlog} 
+          />
+          <button onClick={() => setNewBlogVisible(false)}>cancel</button>
+        </div>
+
+        {renderBlogs()}
     </div>
+
     )
   }
 
