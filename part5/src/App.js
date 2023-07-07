@@ -12,9 +12,6 @@ const [blogs, setBlogs] = useState([])
 const [username, setUsername] = useState('') 
 const [password, setPassword] = useState('') 
 const [user, setUser] = useState(null)
-const [title, setTitle] = useState("")
-const [author, setAuthor] = useState("")
-const [url, setUrl] = useState("")
 const [message, setMessage] = useState(null)
 const [error, setError] = useState(false)
 
@@ -93,35 +90,12 @@ const handleLogin = async (event) => {
     }
   }
 
-  const handleCreateNewBlog = async (event) => {
-    event.preventDefault()
 
-    const blog = {
-      title,
-      author,
-      url,
-    }
-
-    try{
-      await blogService.createBlog(blog)
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
-      setMessage(`a new blog ${title} by ${author} created`)
-      setAuthor("")
-      setTitle("")
-      setUrl("")
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }catch(exception){
-      setMessage('Failed to create blog, please try again')
-      setError(true)
-      setTimeout(() => {
-        setMessage(null)
-        setError(false)
-      }, 5000)
-    }
-
+  const addBlog = async(blogObject) => {
+    await blogService.createBlog(blogObject)
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
+    setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
   }
 
 
@@ -134,9 +108,7 @@ const handleLogin = async (event) => {
         <button onClick={handleLogout}>Log out</button>
 
         <Togglable buttonLabel="new blog">
-        <NewBlogForm title={title} author={author} url={url} setTitle={setTitle} 
-          setAuthor={setAuthor} setUrl={setUrl} handleCreateBlog={handleCreateNewBlog} 
-        />
+        <NewBlogForm handleCreateBlog={addBlog} />
         </Togglable>
 
         {renderBlogs()}
