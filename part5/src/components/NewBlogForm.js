@@ -18,7 +18,7 @@ export const NewBlogForm = ({handleCreateBlog}) => {
     setAuthor('')
     setUrl('')
   }
-
+  
     return (
       <div>
         <h3>Create new blog</h3>
