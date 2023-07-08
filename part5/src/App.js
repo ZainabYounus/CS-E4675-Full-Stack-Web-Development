@@ -6,6 +6,7 @@ import { NewBlogForm } from './components/NewBlogForm'
 import { LoginForm } from './components/LoginForm'
 import { Notification } from './components/Notification'
 import { Togglable } from './components/Togglable'
+import './styling/App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -21,29 +22,6 @@ const App = () => {
     return
   }
 
-  useEffect(() => {
-    try{
-      if(user){
-        if(user.token){
-          blogService.setToken(user.token)
-          blogService.getAll()
-            .then(blogs => {
-              blogs.sort((a, b) => b.likes - a.likes)
-              setBlogs( blogs )
-            })
-        }
-      }
-    }
-    catch(exception){
-      setMessage('Login to get blogs')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
-
-
-  }, [])
-
   // The empty array as the parameter of the effect ensures that the effect is executed only when the component is rendered for the first time.
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -53,6 +31,43 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const blogs = await blogService.getAll()
+        blogs.sort((a, b) => b.likes - a.likes)
+        setBlogs(blogs)
+      } catch (exception) {
+        // setMessage('Login to get blogs')
+        // setError(true)
+        setTimeout(() => {
+          setMessage(null)
+          setError(false)
+        }, 5000)
+      }
+    }
+    fetchBlogs()
+  }, [])
+
+  // useEffect(() => {
+  //   try{
+  //     console.log('called2', user)
+  //     blogService.getAll()
+  //       .then(blogs => {
+  //         blogs.sort((a, b) => b.likes - a.likes)
+  //         setBlogs( blogs )
+  //       })
+  //   }
+  //   catch(exception){
+  //     setMessage('Login to get blogs')
+  //     setTimeout(() => {
+  //       setMessage(null)
+  //     }, 5000)
+  //   }
+
+
+  // }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -138,40 +153,16 @@ const App = () => {
     }
   }
 
-  // const addBlog = async(blogObject) => {
-  //   blogFormRef.current.toggleVisibility()
-  //   try{
-  //     await blogService.createBlog(blogObject)
-  //     const blogs = await blogService.getAll()
-  //     blogs.sort((a, b) => b.likes - a.likes)
-  //     setBlogs(blogs)
-  //     setMessage(`a new blog ${blogObject.title} by ${blogObject.author} created`)
-  //     setTimeout(() => {
-  //       setMessage(null)
-  //     }, 5000)
-  //   }
-  //   catch(exception){
-  //     setMessage('Failed to create blog, please try again')
-  //     setError(true)
-  //     setTimeout(() => {
-  //       setMessage(null)
-  //       setError(false)
-  //     }, 5000)
-  //   }
-
-  // }
-
 
   const blogsForm = () => {
 
     return(
       <div>
-        <h2>blogs</h2>
-        <h4>{user.username} logged in</h4>
-        <button onClick={handleLogout}>Log out</button>
+        <h4 className='loggedin-user'>{user.username} logged in</h4>
+        <button className='logout-button' onClick={handleLogout}>Log out</button>
 
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <NewBlogForm setMessage={setMessage} setBlogs={setBlogs} setError={setError} blogFormRef={blogFormRef}/>
+        <Togglable className='togglable-button' buttonLabel="new blog" ref={blogFormRef}>
+          <NewBlogForm setMessage={setMessage} setBlogs={setBlogs} setError={setError} blogFormRef={blogFormRef} testSubmit={testSubmit}/>
         </Togglable>
 
         {renderBlogs()}
@@ -191,6 +182,7 @@ const App = () => {
 
   return (
     <div>
+      <h1 id='app-header'>Blogs</h1>
       {
         message !== null && <Notification message={message} error={error} />
       }

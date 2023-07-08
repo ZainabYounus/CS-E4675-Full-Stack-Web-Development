@@ -1,3 +1,5 @@
+import '../styling/App.css'
+
 export const LoginForm = ({ handleLogin, username, password, setPassword, setUsername }) => {
   return(
     <div>
@@ -7,6 +9,7 @@ export const LoginForm = ({ handleLogin, username, password, setPassword, setUse
         <div>
           username
           <input
+            id='username-input'
             type="text"
             value={username}
             name="Username"
@@ -16,13 +19,14 @@ export const LoginForm = ({ handleLogin, username, password, setPassword, setUse
         <div>
         password
           <input
+            id='password-input'
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">login</button>
+        <button className='login-button' type="submit">login</button>
       </form>
 
     </div>

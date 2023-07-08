@@ -8,15 +8,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "ts-jest": "^29.0.5"
+    "ts-jest": "^29.0.5",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -45,7 +47,9 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "babel-jest": "^29.4.3",
+    "cypress": "^12.17.0",
     "enzyme": "^3.11.0",
+    "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-jest": "^27.2.1",
     "jest": "^29.4.3"
   },
@@ -55,4 +59,3 @@
     }
   }
 }
-

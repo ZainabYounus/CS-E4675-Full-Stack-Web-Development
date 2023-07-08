@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import '../styling/App.css'
 
 export const NewBlogForm = ({ setMessage, setBlogs, setError, blogFormRef, testSubmit }) => {
 
@@ -42,15 +43,15 @@ export const NewBlogForm = ({ setMessage, setBlogs, setError, blogFormRef, testS
       <h3>Create new blog</h3>
       <form onSubmit={addBlog}>
         <div>
-          <input placeholder="Title" type="text" value={title} name="title" onChange={event => setTitle(event.target.value)}/>
+          <input id='createblog-title' placeholder="Title" type="text" value={title} name="title" onChange={event => setTitle(event.target.value)}/>
         </div>
         <div>
-          <input placeholder="Author" type="text" value={author} name="author" onChange={event => setAuthor(event.target.value)} />
+          <input id='createblog-author'placeholder="Author" type="text" value={author} name="author" onChange={event => setAuthor(event.target.value)} />
         </div>
         <div>
-          <input placeholder="URL" type="text" value={url} name="url" onChange={event => setUrl(event.target.value)} />
+          <input  id='createblog-url' placeholder="URL" type="text" value={url} name="url" onChange={event => setUrl(event.target.value)} />
         </div>
-        <button onClick={testSubmit} type="submit">Create</button>
+        <button className='create-button' onClick={testSubmit} type="submit">Create</button>
       </form>
     </div>
   )

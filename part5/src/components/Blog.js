@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../styling/blog.css'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, setBlogs, user, setMessage, setError, updateBlog }) => {
   const [details, setDetails] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
+
+  useEffect(() => {
+    if (user && blog.user.username === user.username) {
+      setShowDelete(true)
+    }
+  })
 
   const toggleDetails = () => {
     setDetails(!details)
@@ -18,7 +25,6 @@ const Blog = ({ blog, setBlogs, user, setMessage, setError, updateBlog }) => {
     if (!window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
       return
     }
-
     if (user && blog.user.username === user.username) {
       try {
         const title = blog.title
@@ -62,8 +68,16 @@ const Blog = ({ blog, setBlogs, user, setMessage, setError, updateBlog }) => {
             <a id='blog-url' href={blog.url}>{blog.url}</a><br/>
             <div id='likes'>{blog.likes}<button className='like-button' onClick={() => updateBlog(blog)}>like</button><br/></div>
             {blog.user.username}<br/>
-            <button className="delete-button" onClick={deleteBlog}>delete</button>
-            <br/>
+            {
+              showDelete
+                ?
+                <div>
+                  <button className='delete-button' onClick={deleteBlog}>delete</button>
+                  <br/>
+                </div>
+                :
+                null
+            }
             <button className="toggle-details" onClick={toggleDetails}>hide</button>
           </div>
           :

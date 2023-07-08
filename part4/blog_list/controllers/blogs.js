@@ -15,7 +15,6 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 	const body = request.body
 	const jwtUser =  request.user
 	const user = await User.findById(jwtUser.id)
-
 	if(!body.title || !body.url){
 		response.status(400).json({ error: 'Bad Request' })
 	}
@@ -65,7 +64,6 @@ blogsRouter.put('/:id', async (request, response) => {
 // DELETE A BLOG BY ID
 blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
 	const jwtUser =  request.user
-
 	const blog = await Blog.findById(request.params.id)
 	if(jwtUser.id.toString() === blog.user.toString()){
 		await Blog.findByIdAndRemove(request.params.id)
