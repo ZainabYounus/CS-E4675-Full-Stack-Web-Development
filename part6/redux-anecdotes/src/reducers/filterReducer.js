@@ -1,45 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit"
+const initialState = ''
 
-const filterSlice = createSlice({
-  name: 'filter',
-  initialState: 'ALL',
-  reducers: {
-    filterChange(state, action) {
-      action.type = 'FILTER'
+const filterReducer = (state = initialState, action) => {
+  console.log('state now: ', state)
+  console.log('action', action)
+
+  switch (action.type) {
+    case 'SET_FILTER':
       return action.payload
-    },
-    filterRemove(state, action) {
-      action.type = 'ALL'
+    default:
       return state
-    }
   }
-})
+}
 
-export const { filterChange, filterRemove } = filterSlice.actions
-export default filterSlice.reducer
+export const filterChange = (filter) => {
+  return {
+    type: 'SET_FILTER',
+    payload: filter
+  }
+}
 
-// const filterReducer = (state='ALL', action) => {
-//   switch (action.type) {
-//     case 'FILTER':
+export default filterReducer
+
+// import { createSlice } from "@reduxjs/toolkit"
+
+// const filterSlice = createSlice({
+//   name: 'filter',
+//   initialState: 'ALL',
+//   reducers: {
+//     filterChange(state, action) {
+//       action.type = 'FILTER'
 //       return action.payload
-//     case 'ALL':
+//     },
+//     filterRemove(state, action) {
+//       action.type = 'ALL'
 //       return state
-//     default:
-//       return state
+//     }
 //   }
-// }
+// })
 
-// export const filterChange = (filter) => {
-//   return {
-//     type: 'FILTER',
-//     payload: filter
-//   }
-// }
-
-// export const filterRemove = () => {
-//   return {
-//     type: 'ALL',
-//   }
-// }
-
-// export default filterReducer
+// export const { filterChange, filterRemove } = filterSlice.actions
+// export default filterSlice.reducer

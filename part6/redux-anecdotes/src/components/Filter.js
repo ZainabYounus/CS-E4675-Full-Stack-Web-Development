@@ -1,22 +1,45 @@
-import { filterChange, filterRemove } from "../reducers/filterReducer"
+import { filterChange } from '../reducers/filterReducer'
+import { useDispatch } from 'react-redux'
 
-const Filter = ({ dispatch }) => {
-  const handleChange = (event) => {
-    // input-field value is in variable event.target.value
-    if (event.target.value.length === 0) {
-      dispatch(filterRemove())
+const Filter = () => {
+    const dispatch = useDispatch()
+    const handleChange = (event) => {
+      // input-field value is in variable event.target.value
+      console.log(event.target.value)
+      dispatch(filterChange(event.target.value))
     }
-    dispatch(filterChange(event.target.value))
+    const style = {
+      marginBottom: 10
+    }
+  
+    return (
+      <div style={style}>
+        filter <input onChange={handleChange} />
+      </div>
+    )
   }
-  const style = {
-    marginBottom: 10
-  }
+  
+  export default Filter
 
-  return (
-    <div style={style}>
-      filter <input onChange={handleChange} />
-    </div>
-  )
-}
+// import { filterChange, filterRemove } from "../reducers/filterReducer"
 
-export default Filter
+// const Filter = ({ dispatch }) => {
+//   const handleChange = (event) => {
+//     // input-field value is in variable event.target.value
+//     if (event.target.value.length === 0) {
+//       dispatch(filterRemove())
+//     }
+//     dispatch(filterChange(event.target.value))
+//   }
+//   const style = {
+//     marginBottom: 10
+//   }
+
+//   return (
+//     <div style={style}>
+//       filter <input onChange={handleChange} />
+//     </div>
+//   )
+// }
+
+// export default Filter
